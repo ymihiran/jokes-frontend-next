@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import axios from 'axios';
 
 export default function SubmitJoke() {
   const [content, setContent] = useState('');
@@ -9,10 +10,21 @@ export default function SubmitJoke() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    setMessage(''); 
+
     try {
-      // API call
-      setMessage('Joke submitted successfully!');
-    } catch {
+      // API call to submit the joke
+      const response = await axios.post('http://localhost:3001/jokes', {
+        content,
+        type,
+      });
+
+      if (response.status === 200) {
+        setMessage('Joke submitted successfully!');
+        setContent(''); 
+        setType('');    
+      }
+    } catch (err) {
       setMessage('Failed to submit joke.');
     }
   };
